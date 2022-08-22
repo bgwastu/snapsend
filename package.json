@@ -9,6 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/server": "^11.10.0",
+    "@mantine/core": "^5.2.3",
+    "@mantine/dropzone": "^5.2.3",
+    "@mantine/hooks": "^5.2.3",
+    "@mantine/modals": "^5.2.3",
+    "@mantine/next": "^5.2.3",
+    "@mantine/notifications": "^5.2.3",
+    "@mantine/nprogress": "^5.2.3",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
