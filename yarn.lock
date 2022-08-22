@@ -2347,6 +2347,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+tabler-icons@^1.35.0:
+  version "1.35.0"
+  resolved "https://registry.yarnpkg.com/tabler-icons/-/tabler-icons-1.35.0.tgz#84afc81b8814ddbe468066182177d25a4def918f"
+  integrity sha512-8ZbCA3oVQAsVYljvA4UiGRdB01hKqjFcbVTViw5y2Hs2SSpZ/iMB2XYbDZkfB8TqWAXvsho272avD5rYe3wXaw==
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
