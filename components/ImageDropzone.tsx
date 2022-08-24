@@ -6,7 +6,7 @@ import usePhotoStore from '../stores/photo';
 
 const ImageDropzone = () => {
   const [active, setActive] = useState(true);
-  const { photo, setPhoto, loading } = usePhotoStore();
+  const setPhoto = usePhotoStore((s) => s.setPhoto);
 
   return (
     <Dropzone.FullScreen
@@ -14,7 +14,7 @@ const ImageDropzone = () => {
       accept={['image/png', 'image/jpg', 'image/jpeg']}
       maxFiles={1}
       onDrop={(files) => {
-        if(files[0]){
+        if (files[0]) {
           setPhoto(files[0]);
         }
       }}
