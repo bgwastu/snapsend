@@ -1,10 +1,7 @@
 import {
-  Button,
   Container,
-  Input,
   LoadingOverlay,
   Modal,
-  SegmentedControl,
   SimpleGrid,
   Stack,
   Text,
@@ -12,17 +9,14 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { openConfirmModal } from '@mantine/modals';
 import type { NextPage } from 'next';
 import { parse } from 'next-useragent';
-import { IconSend } from 'tabler-icons';
 import DesktopUploadButtons from '../components/DesktopUploadButtons';
 import ImageDropzone from '../components/ImageDropzone';
 import Logo from '../components/Logo';
-import Header from '../components/Logo';
 import MobileUploadButton from '../components/MobileUploadButtons';
 import PhotoPreview from '../components/PhotoPreview';
-import SendPhotoContainer from '../components/SendPhotoContainer';
+import UploadInputs from '../components/UploadInputs';
 import usePhotoStore from '../stores/photo';
 
 const Home: NextPage = ({ uaString }: any) => {
@@ -45,7 +39,16 @@ const Home: NextPage = ({ uaString }: any) => {
         size="xl"
         centered
       >
-        <SendPhotoContainer />
+        <SimpleGrid
+          cols={2}
+          breakpoints={[
+            { maxWidth: 755, cols: 2, spacing: 'sm' },
+            { maxWidth: 600, cols: 1, spacing: 'sm' },
+          ]}
+        >
+          <PhotoPreview />
+          <UploadInputs />
+        </SimpleGrid>
       </Modal>
       <Container my={20}>
         <Logo />
