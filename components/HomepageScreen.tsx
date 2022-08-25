@@ -84,7 +84,7 @@ const DesktopUploadButtons = () => {
       <FileButton onChange={setPhoto} accept="image/png,image/jpeg,image/jpg">
         {(props) => (
           <Button {...props} size="lg" leftIcon={<IconUpload />}>
-            Upload image
+            Upload Photo
           </Button>
         )}
       </FileButton>
