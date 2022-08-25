@@ -59,7 +59,13 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
             backgroundColor: 'black',
           }}
         >
-          <Image height={height} fit="contain" src={photo} alt="snap photo" />
+          <Image
+            height={height}
+            fit="contain"
+            src={photo}
+            alt="snap photo"
+            sx={{ pointerEvents: 'none' }}
+          />
         </Box>
         <Progress
           value={percentage}
