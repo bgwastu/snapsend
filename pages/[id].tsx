@@ -151,6 +151,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
   try {
     const snap = await getSnap(id.toUpperCase());
+    console.log(snap.viewedIds);
 
     if (snap.duration === null) {
       return {
