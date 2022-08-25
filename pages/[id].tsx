@@ -1,3 +1,4 @@
+import fingerprintjs from '@fingerprintjs/fingerprintjs';
 import {
   Button,
   Container,
@@ -15,13 +16,11 @@ import Logo from '../components/Logo';
 import ShowImageScreen from '../components/ShowImageScreen';
 import { getSnap } from '../lib/redis';
 import { Snap } from '../lib/types';
-import fingerprintjs from '@fingerprintjs/fingerprintjs';
-import { useShallowEffect } from '@mantine/hooks';
 
 type Props = {
   viewedIds: string[];
   id: string;
-  error: true;
+  error: string;
 };
 
 const Detail = ({ viewedIds, id, error }: Props) => {
@@ -39,6 +38,7 @@ const Detail = ({ viewedIds, id, error }: Props) => {
       .then((res) => {
         setUserId(res.visitorId);
         setIsViewed(viewedIds.includes(res.visitorId));
+        console.log('visitor id: ' + res.visitorId);
       })
       .catch(() => {
         showNotification({
@@ -50,26 +50,31 @@ const Detail = ({ viewedIds, id, error }: Props) => {
       .finally(() => setLoading(false));
   }, [viewedIds]);
 
-  function openSnap() {
+  async function openSnap() {
     setLoading(true);
-    fetch(`/api/view?id=${id}&userId=${userId}`)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error('HTTP error: ' + res.status.toString());
-      })
-      .then((body) => {
+
+    try {
+      const res = await fetch(`/api/view?id=${id}&userId=${userId}`);
+      const body = await res.json();
+
+      if (res.ok) {
         setSnap(body);
-      })
-      .catch((error) => {
+      } else {
         showNotification({
           color: 'red',
           title: 'Error',
-          message: error.message,
+          message: body,
         });
-      })
-      .finally(() => setLoading(false));
+      }
+    } catch (e) {
+      showNotification({
+        color: 'red',
+        title: 'Error',
+        message: 'Unknown error',
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -78,7 +83,7 @@ const Detail = ({ viewedIds, id, error }: Props) => {
       showNotification({
         color: 'red',
         title: 'Error',
-        message: 'Error has been occurred when fetching snap',
+        message: error,
       });
     }
   }, [router, error]);
@@ -160,7 +165,7 @@ export async function getServerSideProps(context: NextPageContext) {
     console.error(e);
     return {
       props: {
-        error: true,
+        error: 'Error has been occurred when fetching snap',
       },
     };
   }

@@ -1,8 +1,14 @@
 import {
   AspectRatio,
-  Box, Button, Image, Input, NumberInput, SegmentedControl,
+  Box,
+  Button,
+  Image,
+  Input,
+  NumberInput,
+  SegmentedControl,
   SimpleGrid,
-  Stack, Text
+  Stack,
+  Text,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
@@ -200,13 +206,11 @@ const UploadInputs = () => {
           <SegmentedControl
             size="md"
             color="violet"
-            onChange={(s) =>
-              form.getInputProps('duration').onChange(parseInt(s))
-            }
+            {...form.getInputProps('duration')}
             data={[
-              { label: '3 seconds', value: '3' },
-              { label: '5 seconds', value: '5' },
-              { label: '10 seconds', value: '10' },
+              { label: '3 seconds', value: 3 },
+              { label: '5 seconds', value: 5 },
+              { label: '10 seconds', value: 10 },
             ]}
           />
         </Input.Wrapper>

@@ -21,13 +21,13 @@ export default async function handler(
 
       if (!snap.duration) {
         return res.status(404).json({
-          message: 'Snap not found',
+          message: 'Snap not found, or has expired',
         });
       }
 
       if (snap.viewedIds.includes(userId)) {
         return res.status(400).json({
-          message: 'user already viewed',
+          message: 'You already viewed this snap',
         });
       }
 
