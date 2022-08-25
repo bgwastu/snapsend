@@ -147,7 +147,8 @@ export async function getServerSideProps(context: NextPageContext) {
   const id = context.query.id as string;
 
   // disable cache
-  context.res?.setHeader('Cache-Control', 's-maxage=0, must-revalidate');
+  context.res?.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
 
   try {
     const snap = await getSnap(id.toUpperCase());
