@@ -35,7 +35,7 @@ const Home: NextPage = ({ uaString }: any) => {
       >
         <UploadedContent />
       </Modal>
-      <Container my={20}>
+      <Container my="lg">
         <Logo />
         {photo !== null ? <PreviewScreen /> : <HomepageScreen ua={ua} />}
       </Container>
