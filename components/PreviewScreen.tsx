@@ -96,6 +96,7 @@ const PreviewScreen = () => {
               userSelect: 'none',
               pointerEvents: 'none',
               backgroundColor: 'black',
+              borderRadius: '5px',
             }}
             withPlaceholder
           />
