@@ -1,24 +1,13 @@
-import Head from 'next/head';
 import {
-  Box,
-  Text,
-  Image,
-  AspectRatio,
-  Progress,
-  Stack,
-  Spoiler,
-  Container,
+  Box, Container, Image, Progress, Spoiler, Stack, Text
 } from '@mantine/core';
 import {
-  useInterval,
-  useShallowEffect,
-  useTimeout,
-  useViewportSize,
+  useInterval, useViewportSize
 } from '@mantine/hooks';
-import { useState, useEffect } from 'react';
-import { Snap } from '../lib/types';
-import { useRouter } from 'next/router';
 import { showNotification } from '@mantine/notifications';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Snap } from '../lib/types';
 
 const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
   const { height } = useViewportSize();
@@ -49,7 +38,6 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
   }, [isFinished, router]);
 
 
-  // incremental percentage from countdown reverse
   const percentage = 100 - ((countdown / duration) * 100);
 
 
