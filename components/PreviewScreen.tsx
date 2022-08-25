@@ -1,21 +1,50 @@
 import {
-  Button,
-  Input,
-  SegmentedControl,
-  SimpleGrid,
-  Stack,
-  Image,
-  Text,
   AspectRatio,
-  Box,
+  Box, Button, Image, Input, NumberInput, SegmentedControl,
+  SimpleGrid,
+  Stack, Text
 } from '@mantine/core';
-import { IconChevronLeft } from 'tabler-icons';
-import { useState } from 'react';
-import { IconSend } from 'tabler-icons';
-import usePhotoStore from '../stores/photo';
+import { useForm } from '@mantine/form';
+import { useMediaQuery } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useMediaQuery, useViewportSize } from '@mantine/hooks';
+import { memo } from 'react';
+import { IconChevronLeft, IconSend, IconUser } from 'tabler-icons';
+import usePhotoStore from '../stores/photo';
+
+const ImageMobileMemo = memo(function ImagePreview(props: { photo: File }) {
+  return (
+    <Image
+      src={URL.createObjectURL(props.photo)}
+      alt="uploaded photo"
+      fit="contain"
+      sx={{
+        userSelect: 'none',
+        pointerEvents: 'none',
+        backgroundColor: 'black',
+        borderRadius: '5px',
+      }}
+      withPlaceholder
+    />
+  );
+});
+const ImageDesktopMemo = memo(function ImagePreview(props: { photo: File }) {
+  return (
+    <Image
+      src={URL.createObjectURL(props.photo)}
+      alt="uploaded photo"
+      fit="contain"
+      height={500}
+      sx={{
+        userSelect: 'none',
+        pointerEvents: 'none',
+        backgroundColor: 'black',
+        borderRadius: '5px',
+      }}
+      withPlaceholder
+    />
+  );
+});
 
 const PreviewScreen = () => {
   const photo = usePhotoStore((s) => s.photo);
@@ -48,20 +77,7 @@ const PreviewScreen = () => {
           Back
         </Button>
         <AspectRatio ratio={9 / 16} mx="auto" mb="sm">
-          {photo && (
-            <Image
-              src={URL.createObjectURL(photo)}
-              alt="uploaded photo"
-              fit="contain"
-              sx={{
-                userSelect: 'none',
-                pointerEvents: 'none',
-                backgroundColor: 'black',
-                borderRadius: '5px',
-              }}
-              withPlaceholder
-            />
-          )}
+          {photo && <ImageMobileMemo photo={photo} />}
         </AspectRatio>
         <UploadInputs />
       </Box>
@@ -69,41 +85,29 @@ const PreviewScreen = () => {
   }
 
   return (
-    <SimpleGrid
-      my="sm"
-      cols={2}
-      breakpoints={[
-        { maxWidth: 755, cols: 2, spacing: 'sm' },
-        { maxWidth: 600, cols: 1, spacing: 'sm' },
-      ]}
-    >
-      <Stack spacing="xs" align="start" justify="center">
-        <Button
-          leftIcon={<IconChevronLeft />}
-          onClick={onBack}
-          variant="outline"
-        >
-          Back
-        </Button>
-
-        {photo && (
-          <Image
-            src={URL.createObjectURL(photo)}
-            alt="uploaded photo"
-            fit="contain"
-            height={550}
-            sx={{
-              userSelect: 'none',
-              pointerEvents: 'none',
-              backgroundColor: 'black',
-              borderRadius: '5px',
-            }}
-            withPlaceholder
-          />
-        )}
-      </Stack>
-      <UploadInputs />
-    </SimpleGrid>
+    <Box>
+      <Button
+        leftIcon={<IconChevronLeft />}
+        onClick={onBack}
+        size="md"
+        my="sm"
+        variant="outline"
+      >
+        Back
+      </Button>
+      <SimpleGrid
+        cols={2}
+        breakpoints={[
+          { maxWidth: 755, cols: 2, spacing: 'sm' },
+          { maxWidth: 600, cols: 1, spacing: 'sm' },
+        ]}
+      >
+        <Stack spacing="xs" align="start" justify="center">
+          {photo && <ImageDesktopMemo photo={photo} />}
+        </Stack>
+        <UploadInputs />
+      </SimpleGrid>
+    </Box>
   );
 };
 
@@ -115,10 +119,27 @@ const UploadInputs = () => {
   const setLoading = usePhotoStore((s) => s.setLoading);
   const loading = usePhotoStore((s) => s.loading);
 
-  const [duration, setDuration] = useState(3);
-  const [caption, setCaption] = useState('');
+  const form = useForm({
+    initialValues: {
+      duration: 3,
+      caption: '',
+      maxViews: 1,
+    },
+    validate: {
+      caption: (value) => {
+        if (value.length > 100) {
+          return 'Caption must be less than 100 characters';
+        }
+      },
+      maxViews: (value) => {
+        if (value <= 0) {
+          return 'Really?';
+        }
+      },
+    },
+  });
 
-  function onUpload() {
+  function onUpload(duration: number, caption: string, maxViews: number) {
     if (photo === null) return;
 
     // photo to base64
@@ -134,6 +155,7 @@ const UploadInputs = () => {
           photo: base64,
           duration,
           caption,
+          maxViews,
         }),
       })
         .then((res) => {
@@ -162,39 +184,64 @@ const UploadInputs = () => {
   }
 
   return (
-    <Stack>
-      <Input.Wrapper
-        label="Duration"
-        description="Photo expiration time"
-        withAsterisk
-      >
-        <SegmentedControl
-          color="violet"
-          onChange={(s) => setDuration(Number(s))}
-          data={[
-            { label: '3 seconds', value: '3' },
-            { label: '5 seconds', value: '5' },
-            { label: '10 seconds', value: '10' },
-          ]}
-        />
-      </Input.Wrapper>
-      <Input.Wrapper
-        label="Caption"
-        description="Write a caption for your photo (optional)"
-      >
-        <Input
-          placeholder="Feeling cute today"
+    <form
+      onSubmit={form.onSubmit((values) =>
+        onUpload(values.duration, values.caption, values.maxViews)
+      )}
+    >
+      <Stack>
+        <Input.Wrapper
+          label="Duration"
           size="md"
-          sx={{ flex: 1 }}
-          onChange={(e: any) => setCaption(e.target.value)}
+          description="Photo expiration time"
+          withAsterisk
+        >
+          <SegmentedControl
+            size="md"
+            color="violet"
+            onChange={(s) =>
+              form.getInputProps('duration').onChange(parseInt(s))
+            }
+            data={[
+              { label: '3 seconds', value: '3' },
+              { label: '5 seconds', value: '5' },
+              { label: '10 seconds', value: '10' },
+            ]}
+          />
+        </Input.Wrapper>
+        <Input.Wrapper
+          label="Caption"
+          size="md"
+          description="Write a caption for your photo (optional)"
+        >
+          <Input
+            placeholder="Write your witty caption here"
+            size="md"
+            maxLength={100}
+            sx={{ flex: 1 }}
+            {...form.getInputProps('caption')}
+          />
+        </Input.Wrapper>
+        <NumberInput
+          label="Maximal Views"
+          description="Maximal person can view this photo (default is 1)"
+          withAsterisk
+          icon={<IconUser size={18} />}
+          size="md"
+          {...form.getInputProps('maxViews')}
         />
-      </Input.Wrapper>
-      <Button leftIcon={<IconSend />} onClick={onUpload} loading={loading}>
-        Send
-      </Button>
-      <Text size="xs" color="grey" italic>
-        The photo will be deleted within 24 hours if not opened.
-      </Text>
-    </Stack>
+        <Button
+          leftIcon={<IconSend />}
+          type="submit"
+          loading={loading}
+          size="md"
+        >
+          Send
+        </Button>
+        <Text size="xs" color="grey" italic>
+          The photo will be deleted within 24 hours if not opened.
+        </Text>
+      </Stack>
+    </form>
   );
 };

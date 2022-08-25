@@ -9,13 +9,16 @@ export default async function handler(
     const snap = JSON.parse(req.body);
 
     // validation
-    if (!snap.photo || !snap.duration) {
+    if (!snap.photo || !snap.duration || !snap.maxViews) {
       return res.status(400).json({
         message: 'Invalid request body',
       });
     }
 
-    uploadSnap(snap)
+    uploadSnap({
+      ...snap,
+      viewedIds: [],
+    })
       .then((id) => {
         res.status(200).json({ id });
       })

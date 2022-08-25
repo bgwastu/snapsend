@@ -32,7 +32,6 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
   }, [countdown]);
 
   useEffect(() => {
-    console.log('triggered');
     if (isFinished) {
       router.push('/');
       showNotification({

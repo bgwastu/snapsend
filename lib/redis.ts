@@ -18,6 +18,8 @@ export interface Snap {
   photo: string;
   caption: string;
   duration: number;
+  maxViews: number;
+  viewedIds: string[];
 }
 
 export class Snap extends Entity {}
@@ -26,6 +28,8 @@ let schema = new Schema(Snap, {
   photo: { type: 'string' },
   caption: { type: 'string' },
   duration: { type: 'number' },
+  maxViews: { type: 'number' },
+  viewedIds: { type: 'string[]' },
 });
 
 export async function uploadSnap(snap: Snap): Promise<string> {
@@ -51,4 +55,12 @@ export async function getSnap(id: string): Promise<Snap> {
   const repository = client.fetchRepository(schema);
   const data = await repository.fetch(id);
   return data;
+}
+
+export async function addViewer(userId: string, id: string): Promise<void> {
+  await connect();
+  const repository = client.fetchRepository(schema);
+  const data = await repository.fetch(id);
+  data.viewedIds.push(userId);
+  await repository.save(data);
 }

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { deleteSnap, getSnap } from '../../lib/redis';
+import { addViewer, deleteSnap, getSnap } from '../../lib/redis';
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,8 +7,9 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     const id = req.query.id as string;
+    const userId = req.query.userId as string;
 
-    if (!id) {
+    if (!id || !userId) {
       return res.status(400).json({
         message: 'Invalid request body',
       });
@@ -24,13 +25,26 @@ export default async function handler(
         });
       }
 
-      await deleteSnap(snap.entityId);
+      if (snap.viewedIds.includes(userId)) {
+        return res.status(400).json({
+          message: 'user already viewed',
+        });
+      }
+
+      // check if snap has reached max views
+      if (snap.viewedIds.length >= snap.maxViews - 1) {
+        await deleteSnap(snap.entityId);
+      }
+
+      addViewer(userId, snap.entityId);
 
       return res.json(snap);
+
+      // add userId to viewedIds
     } catch (e) {
-      return res.status(500).send(e);
+      console.error(e);
+      return res.status(500).end();
     }
   }
-
   return res.status(405).end();
 }

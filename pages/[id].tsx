@@ -1,9 +1,10 @@
 import {
-  Button, Container,
+  Button,
+  Container,
   LoadingOverlay,
   Stack,
   Text,
-  Title
+  Title,
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { NextPageContext } from 'next';
@@ -14,15 +15,44 @@ import Logo from '../components/Logo';
 import ShowImageScreen from '../components/ShowImageScreen';
 import { getSnap } from '../lib/redis';
 import { Snap } from '../lib/types';
+import fingerprintjs from '@fingerprintjs/fingerprintjs';
+import { useShallowEffect } from '@mantine/hooks';
 
-const Detail = ({ id, error }: { id: string; error: string }) => {
+type Props = {
+  viewedIds: string[];
+  id: string;
+  error: true;
+};
+
+const Detail = ({ viewedIds, id, error }: Props) => {
   const router = useRouter();
   const [snap, setSnap] = useState<Snap>();
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isViewed, setIsViewed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    fingerprintjs
+      .load()
+      .then((res) => res.get())
+      .then((res) => {
+        setUserId(res.visitorId);
+        setIsViewed(viewedIds.includes(res.visitorId));
+      })
+      .catch(() => {
+        showNotification({
+          color: 'red',
+          title: 'Error has been occurred',
+          message: 'Failed to get visitor id',
+        });
+      })
+      .finally(() => setLoading(false));
+  }, [viewedIds]);
 
   function openSnap() {
     setLoading(true);
-    fetch(`/api/view?id=${id}`)
+    fetch(`/api/view?id=${id}&userId=${userId}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -48,7 +78,7 @@ const Detail = ({ id, error }: { id: string; error: string }) => {
       showNotification({
         color: 'red',
         title: 'Error',
-        message: error,
+        message: 'Error has been occurred when fetching snap',
       });
     }
   }, [router, error]);
@@ -72,20 +102,34 @@ const Detail = ({ id, error }: { id: string; error: string }) => {
         sx={{ textAlign: 'center' }}
       >
         <Title weight={800} size="h1" sx={{ userSelect: 'none' }}>
-          Someone sent you a snap 📸
+          {isViewed === null
+            ? 'Loading...'
+            : isViewed
+            ? 'Sorry, you cannot see this snap :('
+            : 'Someone sent you a snap 📸'}
         </Title>
+        <Text color="gray" italic sx={{ userSelect: 'none' }}>
+          {"You won't be able to open this snap again after viewing it"}
+        </Text>
         <Stack align="center">
           <Button
             size="lg"
             leftIcon={<IconLockOpen />}
+            disabled={isViewed ?? false}
             onClick={openSnap}
             loading={loading}
           >
             View Snap
           </Button>
-          <Text color="gray" italic sx={{ userSelect: 'none' }}>
-            {"You won't be able to open this snap again after viewing it"}
-          </Text>
+          {viewedIds.length !== 0 && (
+            <Text color="dark" weight="600">
+              Snap has been viewed{' '}
+              <Text component="span" color="violet" weight="800" underline>
+                {viewedIds.length}
+              </Text>{' '}
+              times
+            </Text>
+          )}
         </Stack>
       </Stack>
     </Container>
@@ -105,11 +149,18 @@ export async function getServerSideProps(context: NextPageContext) {
         notFound: true,
       };
     }
-    return { props: { id: id.toUpperCase() } };
-  } catch (err: any) {
+
     return {
       props: {
-        error: err.toString(),
+        id: id.toUpperCase(),
+        viewedIds: snap.viewedIds ?? [],
+      },
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: {
+        error: true,
       },
     };
   }
