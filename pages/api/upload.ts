@@ -20,7 +20,10 @@ export default async function handler(
         res.status(200).json({ id });
       })
       .catch((e) => {
-        res.status(500).send(e);
+        console.error(e);
+        res.status(500).send({
+          message: e.message,
+        });
       });
     return;
   }

@@ -1,5 +1,5 @@
 export type Snap = {
-  image: string;
+  photo: string;
   caption: string;
-  countdown: number;
+  duration: number;
 };
