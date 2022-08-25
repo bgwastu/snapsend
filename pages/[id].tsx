@@ -63,7 +63,7 @@ const Detail = ({ viewedIds, id, error }: Props) => {
         showNotification({
           color: 'red',
           title: 'Error',
-          message: body,
+          message: body.message,
         });
       }
     } catch (e) {
