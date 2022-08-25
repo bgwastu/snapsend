@@ -1,9 +1,13 @@
 import {
-  Box, Container, Image, Progress, Spoiler, Stack, Text
+  Box,
+  Container,
+  Image,
+  Progress,
+  Spoiler,
+  Stack,
+  Text,
 } from '@mantine/core';
-import {
-  useInterval, useViewportSize
-} from '@mantine/hooks';
+import { useInterval, useViewportSize } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -32,14 +36,13 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
     if (isFinished) {
       router.push('/');
       showNotification({
-        message: 'Snap closed',
+        title: 'Snap closed!',
+        message: 'Closed because the photo has expired',
       });
     }
   }, [isFinished, router]);
 
-
-  const percentage = 100 - ((countdown / duration) * 100);
-
+  const percentage = 100 - (countdown / duration) * 100;
 
   return (
     <>
