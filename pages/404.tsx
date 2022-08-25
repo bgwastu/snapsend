@@ -13,7 +13,7 @@ const NotFoundPage = () => {
         <Logo />
         <Stack align="center" my={48}>
           <Title weight={800}>Snap Not Found :(</Title>
-          <Text>
+          <Text align='center'>
             The snap you are looking for was not found on the server, it may
             have been deleted or never existed in the first place.
           </Text>
