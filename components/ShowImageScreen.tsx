@@ -5,9 +5,9 @@ import {
   Progress,
   Spoiler,
   Stack,
-  Text,
+  Text
 } from '@mantine/core';
-import { useInterval, useViewportSize } from '@mantine/hooks';
+import { useInterval, useMediaQuery, useViewportSize } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
   const { height } = useViewportSize();
   const [countdown, setCountdown] = useState(duration);
   const [isFinished, setIsFinished] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 480px)');
   const interval = useInterval(() => setCountdown((s) => s - 0.1), 100);
   const router = useRouter();
 
@@ -35,8 +36,8 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
     if (isFinished) {
       router.push('/');
       showNotification({
-        title: 'Snap closed!',
-        message: 'Closed because the photo has expired',
+        title: 'Snap closed',
+        message: 'Snap closed because the photo has been expired',
       });
     }
   }, [isFinished, router]);
@@ -78,7 +79,7 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
           size="sm"
           radius="xs"
           color="white"
-          mx="lg"
+          mx={isMobile ? 0 : 'lg'}
           my="xs"
         />
         {caption !== '' && (
@@ -96,7 +97,9 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
             p="xs"
           >
             <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
-              <Text color="white">{caption}</Text>
+              <Text color="white" sx={{ wordBreak: 'break-all' }}>
+                {caption}
+              </Text>
             </Spoiler>
           </Stack>
         )}

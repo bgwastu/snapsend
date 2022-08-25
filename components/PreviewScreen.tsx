@@ -72,6 +72,7 @@ const PreviewScreen = () => {
           leftIcon={<IconChevronLeft />}
           onClick={onBack}
           variant="outline"
+          size="md"
           mb="sm"
         >
           Back
