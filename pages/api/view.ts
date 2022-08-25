@@ -31,12 +31,12 @@ export default async function handler(
         });
       }
 
+      addViewer(userId, snap.entityId);
+
       // check if snap has reached max views
       if (snap.viewedIds.length >= snap.maxViews - 1) {
         await deleteSnap(snap.entityId);
       }
-
-      addViewer(userId, snap.entityId);
 
       return res.json(snap);
 
