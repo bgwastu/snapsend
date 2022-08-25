@@ -61,6 +61,8 @@ export async function addViewer(userId: string, id: string): Promise<void> {
   await connect();
   const repository = client.fetchRepository(schema);
   const data = await repository.fetch(id);
-  data.viewedIds.push(userId);
-  await repository.save(data);
+  if (data.viewedIds) {
+    data.viewedIds.push(userId);
+    await repository.save(data);
+  }
 }
