@@ -66,3 +66,10 @@ export async function addViewer(userId: string, id: string): Promise<void> {
     await repository.save(data);
   }
 }
+
+export async function getViewerIds(id: string): Promise<string[] | null> {
+  await connect();
+  const repository = client.fetchRepository(schema);
+  const data = await repository.fetch(id);
+  return data.viewedIds;
+}

@@ -11,6 +11,7 @@ import { showNotification } from '@mantine/notifications';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { IconLockOpen } from 'tabler-icons';
 import Logo from '../components/Logo';
 import ShowImageScreen from '../components/ShowImageScreen';
@@ -18,19 +19,30 @@ import { getSnap } from '../lib/redis';
 import { Snap } from '../lib/types';
 
 type Props = {
-  viewedIds: string[];
   id: string;
-  error: string;
+  error: string | null;
 };
 
-const Detail = ({ viewedIds, id, error }: Props) => {
+const fetcher = (url: string) =>
+  fetch(url)
+    .then((r) => r.json())
+    .then((b) => b.viewerIds);
+
+const Detail = ({ id, error }: Props) => {
   const router = useRouter();
   const [snap, setSnap] = useState<Snap>();
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [isViewed, setIsViewed] = useState<boolean | null>(null);
 
+  const { data: viewedIds, error: err } = useSWR<string[]>(
+    `/api/viewer?id=${id}`,
+    fetcher
+  );
+
   useEffect(() => {
+    if (!viewedIds) return;
+
     setLoading(true);
     fingerprintjs
       .load()
@@ -76,6 +88,17 @@ const Detail = ({ viewedIds, id, error }: Props) => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (err) {
+      router.push('/');
+      showNotification({
+        color: 'red',
+        title: 'Error',
+        message: err,
+      });
+    }
+  }, [router, err]);
 
   useEffect(() => {
     if (error) {
@@ -126,7 +149,7 @@ const Detail = ({ viewedIds, id, error }: Props) => {
           >
             View Snap
           </Button>
-          {viewedIds.length !== 0 && (
+          {viewedIds && viewedIds.length !== 0 && (
             <Text color="dark" weight="600">
               Snap has been viewed{' '}
               <Text component="span" color="violet" weight="800" underline>
@@ -159,7 +182,6 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       props: {
         id: id.toUpperCase(),
-        viewedIds: snap.viewedIds ?? [],
       },
     };
   } catch (e) {
