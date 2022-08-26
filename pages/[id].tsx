@@ -50,7 +50,6 @@ const Detail = ({ id, error }: Props) => {
       .then((res) => {
         setUserId(res.visitorId);
         setIsViewed(viewedIds.includes(res.visitorId));
-        console.log('visitor id: ' + res.visitorId);
       })
       .catch(() => {
         showNotification({
@@ -171,7 +170,6 @@ export async function getServerSideProps(context: NextPageContext) {
 
   try {
     const snap = await getSnap(id.toUpperCase());
-    console.log(snap.viewedIds);
 
     if (snap.duration === null) {
       return {
