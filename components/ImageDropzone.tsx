@@ -5,12 +5,12 @@ import { IconUpload, IconX } from 'tabler-icons';
 import usePhotoStore from '../stores/photo';
 
 const ImageDropzone = () => {
-  const [active, setActive] = useState(true);
   const setPhoto = usePhotoStore((s) => s.setPhoto);
+  const photo = usePhotoStore((s) => s.photo);
 
   return (
     <Dropzone.FullScreen
-      active={active}
+      active={photo ? false : true}
       accept={['image/png', 'image/jpg', 'image/jpeg']}
       maxFiles={1}
       onDrop={(files) => {
