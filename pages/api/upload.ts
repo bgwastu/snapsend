@@ -22,6 +22,9 @@ async function generateShortUrl(url: string): Promise<string> {
   const body = await res.json();
 
   if (!body.shortLink) {
+    // log request
+    console.log(res.status);
+    console.log(body);
     throw new Error('Short link not found');
   }
 
