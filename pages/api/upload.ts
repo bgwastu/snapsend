@@ -22,24 +22,6 @@ async function generateShortUrl(url: string): Promise<string> {
   const body = await res.json();
 
   if (!body.shortLink) {
-    // log request
-    console.log(res.status);
-    console.log(body);
-    console.log(
-      `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.SHORTENER_API_KEY}`
-    );
-    console.log({
-      method: 'POST',
-      body: JSON.stringify({
-        dynamicLinkInfo: {
-          domainUriPrefix: process.env.SHORTENER_DOMAIN,
-          link: url,
-        },
-        suffix: {
-          option: 'SHORT',
-        },
-      }),
-    });
     throw new Error('Short link not found');
   }
 
