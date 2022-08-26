@@ -11,11 +11,11 @@ import usePhotoStore from '../stores/photo';
 
 const Home: NextPage = ({ uaString }: any) => {
   const ua = parse(uaString);
-  const { photo, loading, uploadedPhotoId, reset } = usePhotoStore(
+  const { photo, loading, snapUrl, reset } = usePhotoStore(
     (s) => ({
       photo: s.photo,
       loading: s.loading,
-      uploadedPhotoId: s.uploadedPhotoId,
+      snapUrl: s.snapUrl,
       reset: s.reset,
     }),
     shallow
@@ -26,7 +26,7 @@ const Home: NextPage = ({ uaString }: any) => {
       <LoadingOverlay visible={!photo ? loading : false} />
       <ImageDropzone />
       <Modal
-        opened={uploadedPhotoId !== null}
+        opened={snapUrl !== null}
         onClose={reset}
         title="Uploaded successfully! ️🎉"
         closeOnEscape={false}

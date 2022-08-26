@@ -1,9 +1,11 @@
 import {
   ActionIcon,
-  Button, CopyButton,
+  Button,
+  CopyButton,
   Group,
-  Input, Stack,
-  Text
+  Input,
+  Stack,
+  Text,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -12,21 +14,20 @@ import {
   IconBrandWhatsapp,
   IconCheck,
   IconCopy,
-  IconLink
+  IconLink,
 } from 'tabler-icons';
 import usePhotoStore from '../stores/photo';
 
 const UploadedContent = () => {
   const isMobile = useMediaQuery('(max-width: 480px)');
-  const uploadedPhotoId = usePhotoStore((s) => s.uploadedPhotoId);
-  const snapUrl = window.location.origin + '/' + uploadedPhotoId?.toLowerCase();
+  const snapUrl = usePhotoStore((s) => s.snapUrl);
 
   return (
     <Stack>
       {isMobile ? (
         <Stack>
-          <Input icon={<IconLink />} value={snapUrl} />
-          <CopyButton value={snapUrl}>
+          <Input icon={<IconLink />} value={snapUrl ?? ''} />
+          <CopyButton value={snapUrl ?? ''}>
             {({ copied, copy }) =>
               copied ? (
                 <Button leftIcon={<IconCheck />} color="green">
@@ -42,8 +43,8 @@ const UploadedContent = () => {
         </Stack>
       ) : (
         <Group>
-          <Input icon={<IconLink />} value={snapUrl} sx={{ flex: 1 }} />
-          <CopyButton value={snapUrl}>
+          <Input icon={<IconLink />} value={snapUrl ?? ''} sx={{ flex: 1 }} />
+          <CopyButton value={snapUrl ?? ''}>
             {({ copied, copy }) =>
               copied ? (
                 <Button leftIcon={<IconCheck />} color="green">

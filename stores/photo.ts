@@ -6,8 +6,8 @@ import { devtools } from 'zustand/middleware';
 interface PhotoState {
   photo: File | null;
   loading: boolean;
-  uploadedPhotoId: string | null;
-  setUploadedPhotoId: (photoId: string) => void;
+  snapUrl: string | null;
+  setSnapUrl: (url: string | null) => void;
   reset: () => void;
   setLoading: (loading: boolean) => void;
   setPhoto: (photo: File | null) => Promise<void>;
@@ -17,15 +17,14 @@ const usePhotoStore = create<PhotoState>()(
   devtools((set, get) => ({
     photo: null,
     loading: false,
-    uploadedPhotoId: null,
-    setUploadedPhotoId: (photoId) => {
-      set((state) => ({ ...state, uploadedPhotoId: photoId }));
-    },
+    snapUrl: null,
+    setSnapUrl: (url: string | null) =>
+      set((state) => ({ ...state, snapUrl: url })),
     reset: () => {
       set({
         photo: null,
-        uploadedPhotoId: null,
         loading: false,
+        snapUrl: null,
       });
     },
     setLoading: (loading) => set({ loading }),

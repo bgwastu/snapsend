@@ -122,7 +122,7 @@ export default PreviewScreen;
 
 const UploadInputs = () => {
   const photo = usePhotoStore((s) => s.photo);
-  const setUploadedPhotoId = usePhotoStore((s) => s.setUploadedPhotoId);
+  const setSnapUrl = usePhotoStore((s) => s.setSnapUrl);
   const setLoading = usePhotoStore((s) => s.setLoading);
   const loading = usePhotoStore((s) => s.loading);
 
@@ -173,10 +173,10 @@ const UploadInputs = () => {
           }
         })
         .then((body) => {
-          if (body.id) {
-            setUploadedPhotoId(body.id);
+          if (body.url) {
+            setSnapUrl(body.url);
           } else {
-            throw new Error('Upload failed, id is not returned');
+            throw new Error('Upload failed, url is not returned');
           }
         })
         .catch((error) => {
