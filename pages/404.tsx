@@ -7,7 +7,7 @@ const NotFoundPage = () => {
   return (
     <>
       <Head>
-        <title>SnapSend - 404 Not Found</title>
+        <title>Snapsend - 404 Not Found</title>
       </Head>
       <Container my="lg">
         <Logo />

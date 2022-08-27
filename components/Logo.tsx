@@ -36,7 +36,7 @@ const Logo = () => {
       >
         Snap
         <Text color={theme.colors.violet[7]} inherit component="span">
-          Send
+          send
         </Text>
       </Text>
     </Group>

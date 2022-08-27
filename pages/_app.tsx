@@ -10,7 +10,7 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>SnapSend</title>
+        <title>Snapsend</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
