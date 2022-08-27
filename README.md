@@ -64,7 +64,7 @@ Details:
 
 ### How the data is accessed:
 
-THe data was acessed with `redis-om` package.
+The data was acessed with `redis-om` package.
 
 Uploading a snap:
 
