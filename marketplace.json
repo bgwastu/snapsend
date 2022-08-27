@@ -1,0 +1,30 @@
+{
+  "app_name": "Snapsend",
+  "description": "Send limited photos to your friends is easier than ever.",
+  "hidden": "false",
+  "rank": "21",
+  "type": "Full App",
+  "contributed_by": "Community",
+  "repo_url": "https://github.com/bagaswastu/snapsend",
+  "download_url": "",
+  "hosted_url": "https://snapsend.wastu.dev/",
+  "quick_deploy": "true",
+  "deploy_buttons": [
+    {
+      "vercel": "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbagaswastu%2FSnapsend&env=REDIS_URL&envDescription=SHORTENER_API_KEY%20and%20SHORTENER_DOMAIN%20is%20optional.&envLink=https%3A%2F%2Ffirebase.google.com%2Fdocs%2Freference%2Fdynamic-links%2Flink-shortener&project-name=Snapsend&repo-name=Snapsend"
+    }
+  ],
+  "language": ["Typescript"],
+  "redis_commands": [],
+  "redis_features": [],
+  "redis_modules": ["RedisJSON"],
+  "app_image_urls": [
+    "https://user-images.githubusercontent.com/67826350/187028255-ab1d6f86-079d-4234-a493-8c2a5a8e32a9.png",
+    "https://user-images.githubusercontent.com/67826350/187028137-1f2da01a-4bc9-4a54-b0fa-63f08e04e1d7.png",
+    "https://user-images.githubusercontent.com/67826350/187028140-0df30e0b-a159-49ac-a068-a17e6efe49bf.png"
+  ],
+  "youtube_url": "",
+  "special_tags": ["Hackathon"],
+  "verticals": ["Technology"],
+  "markdown": "https://raw.githubusercontent.com/bagaswastu/snapsend/main/README.md"
+}
