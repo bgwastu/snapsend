@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { NextPageContext } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -17,10 +18,12 @@ import Logo from "../../components/Logo";
 import ShowImageScreen from "../../components/ShowImageScreen";
 import { getSnap } from "../../lib/deta";
 import { Snap } from "../../lib/types";
+import jimp from "jimp";
 
 type Props = {
   id: string;
   error: string | null;
+  blurredImage: string | null;
 };
 
 const fetcher = (url: string) =>
@@ -28,7 +31,7 @@ const fetcher = (url: string) =>
     .then((r) => r.json())
     .then((b) => b.viewerIds);
 
-const Detail = ({ id, error }: Props) => {
+const Detail = ({ id, error, blurredImage }: Props) => {
   const router = useRouter();
   const [snap, setSnap] = useState<Snap>();
   const [loading, setLoading] = useState(false);
@@ -36,7 +39,7 @@ const Detail = ({ id, error }: Props) => {
   const [isViewed, setIsViewed] = useState<boolean | null>(null);
 
   const { data: viewedIds, error: err } = useSWR<string[]>(
-    `/api/viewer?id=${id}`,
+    `/api/public/viewer?id=${id}`,
     fetcher
   );
 
@@ -65,7 +68,7 @@ const Detail = ({ id, error }: Props) => {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/view?id=${id}&userId=${userId}`);
+      const res = await fetch(`/api/public/view?id=${id}&userId=${userId}`);
       const body = await res.json();
 
       if (res.ok) {
@@ -119,47 +122,59 @@ const Detail = ({ id, error }: Props) => {
   }
 
   return (
-    <Container my="lg">
-      <Logo />
-      <Stack
-        align="center"
-        justify="center"
-        spacing="md"
-        my={48}
-        sx={{ textAlign: "center" }}
-      >
-        <Title weight={800} size="h1" sx={{ userSelect: "none" }}>
-          {isViewed === null
-            ? "Loading..."
-            : isViewed
-            ? "Sorry, you cannot see this snap :("
-            : "Someone sent you a snap 📸"}
-        </Title>
-        <Text color="gray" italic sx={{ userSelect: "none" }}>
-          {"You won't be able to open this snap again after viewing it"}
-        </Text>
-        <Stack align="center">
-          <Button
-            size="lg"
-            leftIcon={<IconLockOpen />}
-            disabled={isViewed ?? false}
-            onClick={openSnap}
-            loading={loading}
-          >
-            View Snap
-          </Button>
-          {viewedIds && viewedIds.length !== 0 && (
-            <Text color="dark" weight="600">
-              Snap has been viewed{" "}
-              <Text component="span" color="violet" weight="800" underline>
-                {viewedIds.length}
-              </Text>{" "}
-              times
-            </Text>
-          )}
+    <>
+      <Head>
+        {/* og meta */}
+        <meta property="og:title" content="You got a snap 📸" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:description"
+          content="Open this link to see the image that someone sent you."
+        />
+        <meta property="description" content="Open this link to see the image that someone sent you." />
+      </Head>
+      <Container my="lg">
+        <Logo />
+        <Stack
+          align="center"
+          justify="center"
+          spacing="md"
+          my={48}
+          sx={{ textAlign: "center" }}
+        >
+          <Title weight={800} size="h1" sx={{ userSelect: "none" }}>
+            {isViewed === null
+              ? "Loading..."
+              : isViewed
+              ? "Sorry, you cannot see this snap :("
+              : "Someone sent you a snap 📸"}
+          </Title>
+          <Text color="gray" italic sx={{ userSelect: "none" }}>
+            {"You won't be able to open this snap again after viewing it"}
+          </Text>
+          <Stack align="center">
+            <Button
+              size="lg"
+              leftIcon={<IconLockOpen />}
+              disabled={isViewed ?? false}
+              onClick={openSnap}
+              loading={loading}
+            >
+              View Snap
+            </Button>
+            {viewedIds && viewedIds.length !== 0 && (
+              <Text color="dark" weight="600">
+                Snap has been viewed{" "}
+                <Text component="span" color="violet" weight="800" underline>
+                  {viewedIds.length}
+                </Text>{" "}
+                times
+              </Text>
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-    </Container>
+      </Container>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { addViewer, deleteSnap, getSnap } from '../../lib/deta';
+import { addViewer, deleteSnap, getSnap } from '../../../lib/deta';
 
 export default async function handler(
   req: NextApiRequest,
