@@ -6,3 +6,8 @@ micros:
       src: .
       engine: next
       primary: true
+      public_routes:
+        - "/t/*"
+        - "/api/public/*"
+        - "/_next/*"
+        - "/favicon.ico"
