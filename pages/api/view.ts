@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { addViewer, deleteSnap, getSnap } from '../../lib/redis';
+import { addViewer, deleteSnap, getSnap } from '../../lib/deta';
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,9 +17,9 @@ export default async function handler(
 
     try {
       // get snap, then delete snap
-      const snap = await getSnap(id.toUpperCase());
+      const snap = await getSnap(id);
 
-      if (!snap.duration) {
+      if (!snap) {
         return res.status(404).json({
           message: 'Snap not found, or has expired',
         });
@@ -33,10 +33,10 @@ export default async function handler(
 
       // check if snap has reached max views
       if (snap.viewedIds.length >= snap.maxViews - 1) {
-        await deleteSnap(snap.entityId);
+        await deleteSnap(id);
       }
 
-      addViewer(userId, snap.entityId);
+      addViewer(userId, id);
 
       return res.json(snap);
 

@@ -15,7 +15,7 @@ import useSWR from 'swr';
 import { IconLockOpen } from 'tabler-icons';
 import Logo from '../components/Logo';
 import ShowImageScreen from '../components/ShowImageScreen';
-import { getSnap } from '../lib/redis';
+import { getSnap } from '../lib/deta';
 import { Snap } from '../lib/types';
 
 type Props = {
@@ -169,9 +169,9 @@ export async function getServerSideProps(context: NextPageContext) {
   const id = context.query.id as string;
 
   try {
-    const snap = await getSnap(id.toUpperCase());
+    const snap = await getSnap(id);
 
-    if (snap.duration === null) {
+    if (snap === null) {
       return {
         notFound: true,
       };

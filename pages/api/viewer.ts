@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getViewerIds } from '../../lib/redis';
+import { getViewerIds } from '../../lib/deta';
 
 export default async function header(
   req: NextApiRequest,
