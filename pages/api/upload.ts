@@ -26,7 +26,7 @@ export default async function handler(
       });
 
       return res.status(200).json({
-        url: `${origin}/${id}`,
+        url: `${origin}/t/${id}`,
       });
     } catch (e: any) {
       return res.status(500).send({
