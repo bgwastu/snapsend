@@ -63,6 +63,7 @@ const Detail = ({ id, error }: Props) => {
   }, [viewedIds]);
 
   async function openSnap() {
+    if(isViewed) return;
     setLoading(true);
 
     try {
@@ -154,7 +155,7 @@ const Detail = ({ id, error }: Props) => {
             <Button
               size="lg"
               leftIcon={<IconLockOpen />}
-              disabled={isViewed ?? false}
+              disabled={isViewed ?? true}
               onClick={openSnap}
               loading={loading}
             >
