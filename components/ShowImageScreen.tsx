@@ -34,11 +34,12 @@ const ShowImageScreen = ({ photo, duration, caption }: Snap) => {
 
   useEffect(() => {
     if (isFinished) {
-      router.push('/');
       showNotification({
-        title: 'Snap closed',
-        message: 'Snap closed because the photo has been expired',
+        title: 'Snap closed 🔒',
+        message: `Refreshing the page...`,
       });
+
+      window.location.reload();
     }
   }, [isFinished, router]);
 

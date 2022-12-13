@@ -12,7 +12,7 @@ const NotFoundPage = () => {
       <Container my="lg">
         <Logo />
         <Stack align="center" my={48}>
-          <Title weight={800}>Snap Not Found :(</Title>
+          <Title weight={800}>Snap not found or expired :(</Title>
           <Text align='center'>
             The snap you are looking for was not found on the server, it may
             have been deleted or never existed in the first place.

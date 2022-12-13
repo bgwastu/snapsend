@@ -5,7 +5,7 @@ import {
   LoadingOverlay,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { NextPageContext } from "next";
@@ -18,12 +18,10 @@ import Logo from "../../components/Logo";
 import ShowImageScreen from "../../components/ShowImageScreen";
 import { getSnap } from "../../lib/deta";
 import { Snap } from "../../lib/types";
-import jimp from "jimp";
 
 type Props = {
   id: string;
   error: string | null;
-  blurredImage: string | null;
 };
 
 const fetcher = (url: string) =>
@@ -31,7 +29,7 @@ const fetcher = (url: string) =>
     .then((r) => r.json())
     .then((b) => b.viewerIds);
 
-const Detail = ({ id, error, blurredImage }: Props) => {
+const Detail = ({ id, error }: Props) => {
   const router = useRouter();
   const [snap, setSnap] = useState<Snap>();
   const [loading, setLoading] = useState(false);
@@ -194,7 +192,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
     return {
       props: {
-        id: id.toUpperCase(),
+        id,
       },
     };
   } catch (e) {
