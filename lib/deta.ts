@@ -6,7 +6,6 @@ const deta = Deta();
 const db = deta.Base("snaps");
 
 export async function uploadSnap(snap: Snap): Promise<string> {
-
   const daySeconds = 60 * 60 * 24;
 
   const res = await db.put(snap, undefined, { expireIn: daySeconds });
@@ -35,9 +34,19 @@ export async function getSnap(id: string): Promise<Snap | null> {
 export async function addViewer(userId: string, id: string): Promise<void> {
   const daySeconds = 60 * 60 * 24;
 
-  const res = await db.update({ viewedIds: [userId] }, id.toLowerCase(), {
-    expireIn: daySeconds,
-  });
+  const snap = await getSnap(id);
+
+  if (snap === null) {
+    throw new Error("Snap not found");
+  }
+
+  const res = await db.update(
+    { viewedIds: [...snap.viewedIds, userId] },
+    id.toLowerCase(),
+    {
+      expireIn: daySeconds,
+    }
+  );
 
   if (res === null) {
     throw new Error("Failed to add viewer");
