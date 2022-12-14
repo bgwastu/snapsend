@@ -9,14 +9,14 @@ import {
   SimpleGrid,
   Stack,
   Text,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
-import { openConfirmModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
-import { memo } from 'react';
-import { IconChevronLeft, IconSend, IconUser } from 'tabler-icons';
-import usePhotoStore from '../stores/photo';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useMediaQuery } from "@mantine/hooks";
+import { openConfirmModal } from "@mantine/modals";
+import { showNotification } from "@mantine/notifications";
+import { memo } from "react";
+import { IconChevronLeft, IconSend, IconUser } from "tabler-icons";
+import usePhotoStore from "../stores/photo";
 
 const ImageMobileMemo = memo(function ImagePreview(props: { photo: File }) {
   return (
@@ -25,10 +25,10 @@ const ImageMobileMemo = memo(function ImagePreview(props: { photo: File }) {
       alt="uploaded photo"
       fit="contain"
       sx={{
-        userSelect: 'none',
-        pointerEvents: 'none',
-        backgroundColor: 'black',
-        borderRadius: '5px',
+        userSelect: "none",
+        pointerEvents: "none",
+        backgroundColor: "black",
+        borderRadius: "5px",
       }}
       withPlaceholder
     />
@@ -42,10 +42,10 @@ const ImageDesktopMemo = memo(function ImagePreview(props: { photo: File }) {
       fit="contain"
       height={500}
       sx={{
-        userSelect: 'none',
-        pointerEvents: 'none',
-        backgroundColor: 'black',
-        borderRadius: '5px',
+        userSelect: "none",
+        pointerEvents: "none",
+        backgroundColor: "black",
+        borderRadius: "5px",
       }}
       withPlaceholder
     />
@@ -56,15 +56,15 @@ const PreviewScreen = () => {
   const photo = usePhotoStore((s) => s.photo);
   const setPhoto = usePhotoStore((s) => s.setPhoto);
 
-  const isMobile = useMediaQuery('(max-width: 480px)');
+  const isMobile = useMediaQuery("(max-width: 480px)");
 
   function onBack() {
     openConfirmModal({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       children: (
         <Text size="sm">You will lose your changes if you go back</Text>
       ),
-      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      labels: { confirm: "Confirm", cancel: "Cancel" },
       onConfirm: () => {
         setPhoto(null);
       },
@@ -105,8 +105,8 @@ const PreviewScreen = () => {
       <SimpleGrid
         cols={2}
         breakpoints={[
-          { maxWidth: 755, cols: 2, spacing: 'sm' },
-          { maxWidth: 600, cols: 1, spacing: 'sm' },
+          { maxWidth: 755, cols: 2, spacing: "sm" },
+          { maxWidth: 600, cols: 1, spacing: "sm" },
         ]}
       >
         <Stack spacing="xs" align="start" justify="center">
@@ -129,18 +129,18 @@ const UploadInputs = () => {
   const form = useForm({
     initialValues: {
       duration: 3,
-      caption: '',
+      caption: "",
       maxViews: 1,
     },
     validate: {
       caption: (value) => {
         if (value.length > 100) {
-          return 'Caption must be less than 100 characters';
+          return "Caption must be less than 100 characters";
         }
       },
       maxViews: (value) => {
         if (value <= 0) {
-          return 'Really?';
+          return "Really?";
         }
       },
     },
@@ -156,8 +156,8 @@ const UploadInputs = () => {
       const base64 = reader.result as string;
       setLoading(true);
 
-      fetch('/api/upload', {
-        method: 'POST',
+      fetch("/api/upload", {
+        method: "POST",
         body: JSON.stringify({
           photo: base64,
           duration,
@@ -176,13 +176,13 @@ const UploadInputs = () => {
           if (body.url) {
             setSnapUrl(body.url);
           } else {
-            throw new Error('Upload failed, url is not returned');
+            throw new Error("Upload failed, url is not returned");
           }
         })
         .catch((error) => {
           showNotification({
-            color: 'red',
-            title: 'Error',
+            color: "red",
+            title: "Error",
             message: error.message,
           });
         })
@@ -206,11 +206,11 @@ const UploadInputs = () => {
           <SegmentedControl
             size="md"
             color="violet"
-            {...form.getInputProps('duration')}
+            {...form.getInputProps("duration")}
             data={[
-              { label: '3 seconds', value: 3 },
-              { label: '5 seconds', value: 5 },
-              { label: '10 seconds', value: 10 },
+              { label: "3 seconds", value: 3 },
+              { label: "5 seconds", value: 5 },
+              { label: "10 seconds", value: 10 },
             ]}
           />
         </Input.Wrapper>
@@ -224,7 +224,7 @@ const UploadInputs = () => {
             size="md"
             maxLength={100}
             sx={{ flex: 1 }}
-            {...form.getInputProps('caption')}
+            {...form.getInputProps("caption")}
           />
         </Input.Wrapper>
         <NumberInput
@@ -233,7 +233,7 @@ const UploadInputs = () => {
           withAsterisk
           icon={<IconUser size={18} />}
           size="md"
-          {...form.getInputProps('maxViews')}
+          {...form.getInputProps("maxViews")}
         />
         <Button
           leftIcon={<IconSend />}
